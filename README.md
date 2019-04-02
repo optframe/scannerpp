@@ -1,5 +1,12 @@
-This is Scanner++ Library, version 0.98, for C++.
+#This is Scanner++ Library
 
-TODO:
-1. Estender a interface do Scanner++ para outros metodos ja contidos
-na interface Scanner Java, como suporte a expressoes regulares.
+
+This project was ported from SourceForge: https://sourceforge.net/projects/scannerpp/
+
+Current version: 0.98-alpha
+
+LGPLv3 License
+
+Copyleft, OptFrame group
+
+2008-2019
