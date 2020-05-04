@@ -6,11 +6,11 @@
 #define SCANNERPP_SCANNER_HPP_
 
 #include <algorithm>
+#include <fstream>
 #include <iostream>
 #include <istream>
 #include <optional>
 #include <sstream>
-#include <fstream>
 #include <string>
 
 #include <map>
@@ -25,20 +25,20 @@ namespace scannerpp {
 class File final
 {
 public:
-   std::ifstream* file{ nullptr };
+   std::ifstream* filestream{ nullptr };
    std::string filename;
 
    // standard constructive: pass 'filename'
    File(std::string _filename) noexcept
-     : filename(_filename)
    {
       // check if file exists
       std::fstream fs;
-      fs.open(filename.c_str());
+      fs.open(_filename.c_str());
       if (fs.is_open()) {
          fs.close();
          // store definitive pointer
-         file = new std::ifstream(filename.c_str(), std::ifstream::in);
+         filename = _filename;
+         filestream = new std::ifstream(filename.c_str(), std::ifstream::in);
       }
    }
 
@@ -52,40 +52,40 @@ public:
 
    // move constructor
    File(File&& f) noexcept
-     : file(f.file)
+     : filestream(f.filestream)
      , filename(f.filename)
    {
-      f.file = nullptr;
+      f.filestream = nullptr;
       f.filename = "";
    }
 
    ~File() noexcept
    {
       close();
-      if (file)
-         delete file;
+      if (filestream)
+         delete filestream;
    }
 
    // returns 'true' if file is open
    bool isOpen() noexcept
    {
-      return file != nullptr;
+      return filestream != nullptr;
    }
 
    int get() noexcept
    {
-      return file && file->get();
+      return filestream && filestream->get();
    }
 
    bool eof() noexcept
    {
-      return file && file->eof();
+      return filestream && filestream->eof();
    }
 
    void close() noexcept
    {
-      if (file)
-         file->close();
+      if (filestream)
+         filestream->close();
       filename = "";
    }
 };
@@ -105,16 +105,24 @@ private:
 public:
    Scanner(File&& f) noexcept
    {
-      isString = false;
-      this->inputfile = new File(std::move(f));
-      this->input = inputfile->file;
+      // check if file is open
+      if (f.isOpen()) {
+         // file is fine
+         isString = false;
+         this->inputfile = new File(std::move(f));
+         this->input = inputfile->filestream;
+      } else {
+         // file is not fine: fallback to empty string
+         isString = true;
+         this->contentString = "";
+         this->input = new std::istringstream(this->contentString);
+      }
       useDefaultSeparators();
    }
 
    Scanner(std::istream* input) noexcept
    {
       isString = false;
-      this->inputfile = nullptr;
       this->input = input;
       useDefaultSeparators();
    }
@@ -122,7 +130,6 @@ public:
    Scanner(std::string input) noexcept
    {
       isString = true;
-      this->inputfile = nullptr;
       this->contentString = input;
       this->input = new std::istringstream(input);
       useDefaultSeparators();
@@ -138,7 +145,7 @@ public:
       if (scanner.inputfile) //for files
       {
          inputfile = new File(scanner.inputfile->filename);
-         input = inputfile->file;
+         input = inputfile->filestream;
       }
 
       if (isString) // for string
@@ -190,7 +197,7 @@ public:
       if (scanner.inputfile) //for files
       {
          inputfile = new File(scanner.inputfile->filename);
-         input = inputfile->file;
+         input = inputfile->filestream;
       }
 
       if (isString) // for string

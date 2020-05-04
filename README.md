@@ -25,7 +25,7 @@ Exceptions are now deprecated, so every `next()` operation will return an `optio
 
 ## How to use
 
-Example 1 (default separators):
+### Example 1 (default separators)
 ```c++
 #include <scannerpp/Scanner.hpp>
 
@@ -52,7 +52,7 @@ int main() {
 }
 ```
 
-Example 2 (other separators):
+### Example 2 (other separators)
 ```c++
 #include <scannerpp/Scanner.hpp>
 
@@ -63,6 +63,25 @@ int main() {
     scanner.useSeparators(" ;\n\t"); // using semi-colon as separator too
     std::cout << scanner.next(); // returns "Hello"
     std::cout << scanner.next(); // returns "World"
+    return 0;
+}
+```
+
+
+### Example 3 (read from File or cin)
+```c++
+#include <scannerpp/Scanner.hpp>
+
+using namespace scannerpp;
+
+int main() {
+    Scanner scanner(File("myfile.txt"));
+    // 'myfile.txt' contains "Hello World" inside it
+    std::cout << scanner.next(); // returns "Hello"
+    std::cout << scanner.next(); // returns "World"
+    Scanner scanner2(&cin); // passing 'cin' as pointer
+    std::cout << scanner2.next() << std::endl; // blocks until user inputs data
+
     return 0;
 }
 ```

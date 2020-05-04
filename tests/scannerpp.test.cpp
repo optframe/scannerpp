@@ -145,3 +145,13 @@ TEST_CASE("Scanner++ Test trim()")
 {
    REQUIRE(Scanner::trim(" \t \n  Hello  World \n \t ") == "Hello  World");
 }
+
+TEST_CASE("Scanner++ Test read from non-existing file")
+{
+   Scanner scanner(File("testbase/test-do-not-exist.txt"));
+   // file should not be open
+   REQUIRE(scanner.filename() == "");
+   // trying to get 'next' anyway! it should be empty and not sigfault
+   std::string s = scanner.next();
+   REQUIRE(s == "");
+}
