@@ -140,12 +140,12 @@ This way, you can just add `#include "Scanner.hpp"`.
 If you want to have it in your system, e.g. to use as `#include <scannerpp/Scanner.hpp>`, you need to do the following steps (next section).
 
 ### System Installation
-First, check if it passes all tests: `make test`.
+First, check if it passes all tests: `make test` and `make test-coverage`.
 
 After, just type `make install` (this will require `sudo`).
 File will be installed on `/usr/local/include/scannerpp`.
 
-After that, `make test-install`, should execute:
+After that, `make test-install`, should return:
 ```
 g++ --std=c++17 test-install.cpp -o scannerpp_test_install
 ./scannerpp_test_install

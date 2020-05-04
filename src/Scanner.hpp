@@ -227,6 +227,7 @@ private:
       // returns char on parameter 'c' (no exception is ever thrown)
       c = x;
       //return x;
+      return true;
    }
 
    void put_back(istream** input, string back) const
@@ -369,7 +370,8 @@ public:
       return r;
    }
 
-private:
+public:
+   // helper function that can be used externally to "clean" stream data
    void trimInput() noexcept
    {
       string s = " \t\n";
@@ -454,7 +456,8 @@ public:
 
       while (hasNextChar()) {
          char c;
-         getChar(*input, c); // ignoring output (should be 'true', because of 'hasNextChar')
+         if (!getChar(*input, c))
+            break;
 
          if (!inSeparators(c)) {
             x = x + c;
@@ -465,7 +468,8 @@ public:
 
       while (hasNextChar()) {
          char c;
-         getChar(*input, c); // ignoring output (should be 'true', because of 'hasNextChar')
+         if (!getChar(*input, c))
+            break;
 
          if (inSeparators(c)) {
             input->putback(c);

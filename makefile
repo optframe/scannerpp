@@ -10,4 +10,6 @@ install:
 	
 test-install:
 	cd tests && make test-install && echo "Finished successfully"
-	
+
+test-coverage:
+	cd tests && make test-coverage && echo "Finished successfully"
