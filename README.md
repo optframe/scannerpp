@@ -69,7 +69,9 @@ int main() {
 
 ## How to Install
 
-On Linux, just type `make install` (this will require `sudo`).
+First, check if it passes all tests: `make test`.
+
+After, just type `make install` (this will require `sudo`).
 File will be installed on `/usr/local/include/scannerpp`.
 
 After that, `make test-install`, should execute:
