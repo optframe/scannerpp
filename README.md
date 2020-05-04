@@ -98,6 +98,7 @@ int main() {
     // remember that 'nextInt()' returns std::optional, to prevent exceptions
     auto x1 = *scanner.nextInt();    // -1 (int)
     auto x2 = *scanner.nextInt();    // 2147483647 (int)  (no overflow)
+    scanner.hasNextInt();            // -------> FALSE!
     auto x3 =  scanner.nextInt();    // this is 'nullopt' (overflow!)
     auto x4 = *scanner.nextLong();   // this is 8589934592 (long)
     auto x5 = *scanner.nextFloat();  // this is 3.14 (float)
@@ -107,6 +108,27 @@ int main() {
     return 0;
 }
 ```
+
+
+### Example 5 (reading numbers with c++17 if)
+```c++
+#include <scannerpp/Scanner.hpp>
+
+using namespace scannerpp;
+
+int main() {
+    Scanner scanner("2147483647  2147483648");
+    // Note that a c++17 'if' can efficiently declare and consume variables,
+    //   as this completely avoids the need for 'hasNextInt' verification
+    if(auto x2 = scanner.nextInt(); x2)
+       printf("x2 is int = %d\n", *x2); // will print
+    if(auto x3 = scanner.nextInt(); x3)
+       printf("x3 is int = %d\n", *x3); // will not print
+    //
+    return 0;
+}
+```
+
 
 ## How to Install
 

@@ -121,21 +121,27 @@ TEST_CASE("Scanner++ Test nextInt() with float cast")
 
 TEST_CASE("Scanner++ Test hasNext numbers")
 {
-   Scanner scanner("3.14     6   898323932.0  898323932.0");
-   // is int?  -->   NO     YES     YES           YES
+   Scanner scanner("3.14    -6   2147483648   898323932.0  898323932.01");
+   // is int?  -->   NO     YES      NO           YES           NO
    REQUIRE(scanner.hasNextDouble()); // 3.14, OK!
    REQUIRE(scanner.hasNextFloat());  // 3.14, OK!
    REQUIRE(!scanner.hasNextInt());   // 3 is NOT 3.14
    scanner.nextInt();                // discard 3.14
-   REQUIRE(scanner.hasNextDouble()); // 6.0, OK!
-   REQUIRE(scanner.hasNextFloat());  // 6.0, OK!
-   REQUIRE(scanner.hasNextInt());    // 6, OK!
-   scanner.nextInt();                // discard 6
+   REQUIRE(scanner.hasNextDouble()); // -6.0, OK!
+   REQUIRE(scanner.hasNextFloat());  // -6.0, OK!
+   REQUIRE(scanner.hasNextInt());    // -6, OK!
+   scanner.nextInt();                // discard -6
+   // BEWARE OF OVERFLOWS
+   REQUIRE(!scanner.hasNextInt()); // overflow, no good int
+   REQUIRE(scanner.hasNextLong()); // good long!
+   scanner.nextInt();              // discard nullopt
    // BEWARE OF FLOAT IMPRECISION!
-   REQUIRE(scanner.hasNextFloat());              // 898323904.0 (error here, but still float)
-   REQUIRE(scanner.hasNextInt());                // 898323932, OK!
-   REQUIRE(scanner.nextFloat() == 898323904.0);  // confirming IEEE754 error (-28)
-   REQUIRE(scanner.nextDouble() == 898323932.0); // no error on double (int compared with double)
+   REQUIRE(scanner.hasNextFloat());             // 898323904.0 (error here, but still float)
+   REQUIRE(scanner.hasNextInt());               // 898323932, OK!
+   REQUIRE(scanner.nextFloat() == 898323904.0); // confirming IEEE754 error (-28)
+   //
+   REQUIRE(!scanner.hasNextInt());                // this is not an integer '898323932.01'
+   REQUIRE(scanner.nextDouble() == 898323932.01); // no error on double (int compared with double)
 }
 
 TEST_CASE("Scanner++ Test nextFloat()")
