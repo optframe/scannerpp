@@ -1,0 +1,32 @@
+#include <iostream>
+
+#define CATCH_CONFIG_MAIN // This tells Catch to provide a main()
+#include "libs/catch2/catch.hpp"
+
+// Some instructions for Catch2
+// https://github.com/catchorg/Catch2/blob/master/docs/test-cases-and-sections.md
+
+#include "../src/Scanner.hpp"
+
+using namespace std;
+using namespace scannerpp;
+
+
+TEST_CASE("Scanner++ Test Open File 'test-1.txt'")
+{
+   File file("testbase/test-1.txt");
+   REQUIRE(file.isOpen());
+}
+
+TEST_CASE("Scanner++ Test Open File 'test-do-not-exist.txt'")
+{
+   File file2("testbase/test-do-not-exist.txt");
+   REQUIRE(!file2.isOpen());
+}
+
+
+TEST_CASE("Scanner++ Test String Hello World")
+{
+   //Scanner scanner("Hello World");
+   //REQUIRE(*scanner.next() == "Hello");
+}
