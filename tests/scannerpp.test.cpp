@@ -126,15 +126,19 @@ TEST_CASE("Scanner++ Test hasNext numbers")
    REQUIRE(scanner.hasNextDouble()); // 3.14, OK!
    REQUIRE(scanner.hasNextFloat());  // 3.14, OK!
    REQUIRE(!scanner.hasNextInt());   // 3 is NOT 3.14
-   scanner.nextInt();                // discard 3.14
+   //
+   REQUIRE(*scanner.nextInt() == 3); // discard 3.14 as: int(3.14) -> 3
+   //
    REQUIRE(scanner.hasNextDouble()); // -6.0, OK!
    REQUIRE(scanner.hasNextFloat());  // -6.0, OK!
    REQUIRE(scanner.hasNextInt());    // -6, OK!
-   scanner.nextInt();                // discard -6
+   //
+   scanner.nextInt(); // discard -6
    // BEWARE OF OVERFLOWS
    REQUIRE(!scanner.hasNextInt()); // overflow, no good int
    REQUIRE(scanner.hasNextLong()); // good long!
-   scanner.nextInt();              // discard nullopt
+   //
+   scanner.nextInt(); // discard nullopt
    // BEWARE OF FLOAT IMPRECISION!
    REQUIRE(scanner.hasNextFloat());             // 898323904.0 (error here, but still float)
    REQUIRE(scanner.hasNextInt());               // 898323932, OK!
@@ -180,4 +184,12 @@ TEST_CASE("Scanner++ Test read from non-existing file")
    // trying to get 'next' anyway! it should be empty and not sigfault
    std::string s = scanner.next();
    REQUIRE(s == "");
+}
+
+TEST_CASE("Scanner++ Test parseInt parseDouble")
+{
+   REQUIRE(*Scanner::parseInt("123") == 123);
+   REQUIRE(*Scanner::parseDouble("2.5") == 2.5);
+   REQUIRE(!Scanner::parseInt("2.5"));    // should return 'nullopt'
+   REQUIRE(!Scanner::parseDouble("xyz")); // should return 'nullopt'
 }

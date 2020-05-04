@@ -534,20 +534,21 @@ public:
          return std::nullopt;
    }
 
-   // parse methods: these can segfault!
 public:
-   // this method CAN segfault! beware!
-   static int parseInt(string s)
+   static std::optional<int> parseInt(std::string s)
    {
       Scanner scanner(s);
-      return *scanner.nextInt();
+      if (!scanner.hasNextInt())
+         return std::nullopt;
+      return scanner.nextInt();
    }
 
-   // this method CAN segfault! beware!
-   static double parseDouble(string s)
+   static std::optional<double> parseDouble(std::string s)
    {
       Scanner scanner(s);
-      return *scanner.nextDouble();
+      if (!scanner.hasNextDouble())
+         return std::nullopt;
+      return scanner.nextDouble();
    }
 
    // trim methods
