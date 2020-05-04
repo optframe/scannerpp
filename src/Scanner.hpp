@@ -1,6 +1,6 @@
 // Scanner Class for C++ - Scanner++
 // https://github.com/optframe/scannerpp
-// version v1.0.3 (development)
+// version v1.0.4 (development)
 // MIT License
 #ifndef SCANNERPP_SCANNER_HPP_
 #define SCANNERPP_SCANNER_HPP_
