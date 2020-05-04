@@ -52,3 +52,17 @@ TEST_CASE("Scanner++ Test File Hello World first char")
    Scanner scanfile(File("testbase/test-2.txt"));
    REQUIRE(*scanfile.nextChar() == 'H');
 }
+
+TEST_CASE("Scanner++ Test String Hello World")
+{
+   Scanner scanner("Hello World");
+   REQUIRE(scanner.next() == "Hello");
+   REQUIRE(scanner.next() == "World");
+}
+
+TEST_CASE("Scanner++ Test File Hello World")
+{
+   Scanner scanfile(File("testbase/test-2.txt"));
+   REQUIRE(scanfile.next() == "Hello");
+   REQUIRE(scanfile.next() == "World");
+}

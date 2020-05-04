@@ -34,19 +34,13 @@ using namespace scannerpp;
 int main() {
     // (1.a) Hello World
     Scanner scanner("Hello World");
-    std::cout << *scanner.next(); // returns "Hello"
-    std::cout << *scanner.next(); // returns "World"
+    std::cout << scanner.next(); // returns "Hello"
+    std::cout << scanner.next(); // returns "World"
 
     // (1.b) Hello World
     Scanner scanner2("Hello World");
     while(scanner2.hasNext())
-        std::cout << *scanner2.next() << std::endl; // "Hello\nWorld"
-
-    // (1.c) Hello World
-    Scanner scanner3("Hello World");
-    std::optional<std::string> v;
-    while(v = scanner3.next()) // no exception and no double-seek!
-        std::cout << *v << std::endl; // "Hello\nWorld"
+        std::cout << scanner2.next() << std::endl; // "Hello\nWorld"
 
     return 0;
 }
@@ -61,8 +55,8 @@ using namespace scannerpp;
 int main() {
     Scanner scanner("Hello;World");
     scanner.useSeparators(" ;\n\t"); // using semi-colon as separator too
-    std::cout << *scanner.next(); // returns "Hello"
-    std::cout << *scanner.next(); // returns "World"
+    std::cout << scanner.next(); // returns "Hello"
+    std::cout << scanner.next(); // returns "World"
     return 0;
 }
 ```

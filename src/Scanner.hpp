@@ -382,33 +382,161 @@ private:
    }
 
 public:
-   std::string peekNext() const;
-   std::string next();
-   std::string nextLine();
+   // next methods: for string
+   std::string peekNext() const noexcept
+   {
+      if (input->eof())
+         return "";
 
-   int nextInt();
-   long nextLong();
-   float nextFloat();
-   double nextDouble();
+      std::string discarded = "";
 
+      std::string x = "";
+
+      istream* input = const_cast<istream*>(this->input);
+
+      while (hasNextChar()) {
+         char c;
+         nextChar(*input, c); // ignoring output (should be 'true', because of 'hasNextChar')
+
+         if (!inSeparators(c)) {
+            x = x + c;
+            break;
+         } else
+            discarded += c;
+      }
+
+      while (hasNextChar()) {
+         char c;
+         nextChar(*input, c); // ignoring output (should be 'true', because of 'hasNextChar')
+
+         if (inSeparators(c)) {
+            input->putback(c);
+            break;
+         }
+
+         x = x + c;
+      }
+
+      discarded.append(x);
+
+      put_back(const_cast<istream**>(&this->input), discarded);
+
+      return x;
+   }
+
+   // next does not need 'optional' afterall... very good! it cannot throw.
+   std::string next() noexcept
+   {
+      discarded = "";
+
+      std::string x = "";
+
+      while (hasNextChar()) {
+         char c;
+         nextChar(*input, c); // ignoring output (should be 'true', because of 'hasNextChar')
+
+         if (!inSeparators(c)) {
+            x = x + c;
+            break;
+         } else
+            discarded += c;
+      }
+
+      while (hasNextChar()) {
+         char c;
+         nextChar(*input, c); // ignoring output (should be 'true', because of 'hasNextChar')
+
+         if (inSeparators(c)) {
+            input->putback(c);
+            break;
+         }
+
+         x = x + c;
+      }
+
+      return x;
+   }
+
+   std::string nextLine() noexcept
+   {
+      string backup_sep = sep;
+      useSeparators("\n");
+      string linha = next();
+      useSeparators(backup_sep);
+
+      return linha;
+   }
+
+   // next numbers: nextInt, nextLong, nextFloat, nextDouble
+public:
+   std::optional<int> nextInt() noexcept
+   {
+      int x;
+      istringstream myStream(next());
+      if (myStream >> x)
+         return std::make_optional(x);
+      else
+         //throw ConversionError("int");
+         return std::nullopt;
+   }
+
+   std::optional<long> nextLong() noexcept
+   {
+      long x;
+      istringstream myStream(next());
+      if (myStream >> x)
+         return std::make_optional(x);
+      else
+         //throw ConversionError("long");
+         return std::nullopt;
+   }
+
+   std::optional<float> nextFloat() noexcept
+   {
+      float x;
+      istringstream myStream(next());
+      if (myStream >> x)
+         return std::make_optional(x);
+      else
+         //throw ConversionError("float");
+         return std::nullopt;
+   }
+
+   std::optional<double> nextDouble() noexcept
+   {
+      double x;
+      istringstream myStream(next());
+      if (myStream >> x)
+         return std::make_optional(x);
+      else
+         //throw ConversionError("double");
+         return std::nullopt;
+   }
+
+   // parse methods: these can segfault!
+public:
+   // this method CAN segfault! beware!
    static int parseInt(string s)
    {
       Scanner scanner(s);
-      return scanner.nextInt();
+      return *scanner.nextInt();
    }
 
+   // this method CAN segfault! beware!
    static double parseDouble(string s)
    {
       Scanner scanner(s);
-      return scanner.nextDouble();
+      return *scanner.nextDouble();
    }
 
-   static bool trimChar(char c)
+   // trim methods
+public:
+   static bool trimChar(char c) noexcept
    {
       return (c == ' ') || (c == '\t') || (c == '\n');
    }
 
-   static string trim(string word)
+   static string trim(string word) noexcept
    {
       if (word.length() == 0)
          return "";
@@ -454,9 +582,113 @@ public:
       return aux_word;
    }
 
-   pair<string, map<string, string>> nextXMLTag();
+public:
+   // XML method: it can segfault! beware!
+   pair<string, map<string, string>> nextXMLTag()
+   {
+      string x = "";
 
-   bool hasNext() const;
+      while (hasNextChar()) {
+         char c = *nextChar();
+
+         if (c == '<') {
+            x = x + c;
+            break;
+         }
+      }
+
+      while (hasNextChar()) {
+         char c = *nextChar();
+         x = x + c;
+
+         if (c == '>')
+            break;
+      }
+
+      cout << "base: " << x << endl;
+
+      if (x.size() < 2 || x.at(0) != '<' || x.at(x.size() - 1) != '>')
+         return make_pair("", map<string, string>());
+
+      Scanner scanner(x);
+      scanner.useSeparators("<>");
+
+      string tagname = "";
+      map<string, string> attr;
+
+      if (scanner.hasNext()) {
+         string tag = scanner.next();
+         //cout << "tag: " << tag << endl;
+
+         Scanner sc_tag(tag);
+         sc_tag.useSeparators(" ");
+
+         if (sc_tag.hasNext())
+            tagname = sc_tag.next();
+
+         //cout << "tagname: " << tagname << endl;
+
+         // TODO usar trim
+
+         sc_tag.useSeparators(" =");
+         while (sc_tag.hasNext()) {
+            string at_name = sc_tag.next();
+            //cout << "at_name: " << at_name << "\t";
+            sc_tag.useSeparators("=\"");
+
+            string at_value = sc_tag.next();
+            //cout << "at_value: " << at_value << "\t";
+
+            attr[at_name] = at_value;
+
+            sc_tag.useSeparators("\" =");
+         }
+      }
+
+      return make_pair(tagname, attr);
+   }
+
+public:
+   // general hasNext methods
+
+   bool hasNext() const noexcept
+   {
+      if (!hasNextChar())
+         return false;
+
+      istream* input = const_cast<istream*>(this->input);
+
+      vector<char> buffer;
+
+      char novo;
+      if (!nextChar(*input, novo))
+         return false; // no next (and no exception!)
+
+      bool next = true;
+
+      while (inSeparators(novo)) {
+         buffer.push_back(novo);
+
+         if (!(hasNextChar())) {
+            next = false;
+            break;
+         }
+
+         if (!nextChar(*input, novo))
+            return false; // no next (and no exception!)
+      }
+
+      if (next) // ha proximo!
+         input->putback(novo);
+
+      //devolver o buffer ao IO
+      while (buffer.size() > 0) {
+         input->putback(buffer.at(buffer.size() - 1));
+         buffer.erase(buffer.begin() + (buffer.size() - 1));
+      }
+
+      return next;
+   }
 
    bool hasNextLine() const
    {
@@ -510,7 +742,22 @@ public:
       return bool(ss >> x);
    }
 
-   string rest(); // Returns the rest of the input as string
+   // Returns the rest of the input as string
+   std::string rest()
+   {
+      string backup_sep = sep;
+
+      useSeparators("");
+
+      string rest = "";
+
+      if (hasNext())
+         rest = next();
+
+      sep = backup_sep;
+
+      return rest;
+   }
 };
 
 } // namespace scannerpp
