@@ -279,12 +279,23 @@ public:
       return false;
    }
 
+public:
+   // inspecting file properties
+
    // returns filename, if some file is open
    string filename() const noexcept
    {
       return inputfile ? inputfile->filename : "";
    }
 
+   // returns true if file is open
+   bool fileIsOpen() const noexcept
+   {
+      return inputfile && inputfile->isOpen();
+   }
+
+public:
+   // helper for discarded text on 'next'
    string getDiscarded() const
    {
       return discarded;
