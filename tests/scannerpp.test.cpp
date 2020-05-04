@@ -25,6 +25,15 @@ TEST_CASE("Scanner++ Test Open File 'test-do-not-exist.txt'")
 }
 
 
+TEST_CASE("Scanner++ Test Open File 'test-1.txt' and move")
+{
+   File file3("testbase/test-1.txt");
+   REQUIRE(file3.isOpen());
+   File file4 = std::move(file3);
+   REQUIRE(file4.filename == "testbase/test-1.txt");
+}
+
+
 TEST_CASE("Scanner++ Test String Hello World")
 {
    //Scanner scanner("Hello World");

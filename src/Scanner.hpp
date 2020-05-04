@@ -24,6 +24,7 @@ public:
    std::ifstream* file{ nullptr };
    std::string filename;
 
+   // standard constructive: pass 'filename'
    File(std::string _filename)
      : filename(_filename)
    {
@@ -35,6 +36,21 @@ public:
          // store definitive pointer
          file = new std::ifstream(filename.c_str(), std::ifstream::in);
       }
+   }
+
+   // empty file (not open)
+   File()
+     : filename("")
+   {
+   }
+
+   // move constructor
+   File(File&& f)
+     : file(f.file)
+     , filename(f.filename)
+   {
+      f.file = nullptr;
+      f.filename = "";
    }
 
    virtual ~File()
