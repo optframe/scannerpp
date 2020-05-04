@@ -80,3 +80,61 @@ TEST_CASE("Scanner++ Test String Hello World in Loop")
       ss << s; // "Hello", then "World"
    REQUIRE(ss.str() == "HelloWorld");
 }
+
+TEST_CASE("Scanner++ Test nextInt() with basic separators")
+{
+   Scanner scanner("1    2\t3\n4  \t \r\n5");
+   REQUIRE(*scanner.nextInt() == 1);
+   REQUIRE(*scanner.nextInt() == 2);
+   REQUIRE(*scanner.nextInt() == 3);
+   REQUIRE(*scanner.nextInt() == 4);
+   REQUIRE(*scanner.nextInt() == 5);
+}
+
+TEST_CASE("Scanner++ Test nextInt() with custom separators")
+{
+   Scanner scanner("1  , X 2\t3");
+   scanner.useSeparators(" ,X\t");
+   REQUIRE(*scanner.nextInt() == 1);
+   REQUIRE(*scanner.nextInt() == 2);
+   REQUIRE(*scanner.nextInt() == 3);
+}
+
+TEST_CASE("Scanner++ Test nextInt() negative and positive")
+{
+   Scanner scanner("0 -1 9999 1");
+   REQUIRE(*scanner.nextInt() == 0);
+   REQUIRE(*scanner.nextInt() == -1);
+   REQUIRE(*scanner.nextInt() == 9999);
+   REQUIRE(*scanner.nextInt() == 1);
+}
+
+TEST_CASE("Scanner++ Test nextInt() with float cast")
+{
+   Scanner scanner("3.14 4.7 6");
+   REQUIRE(*scanner.nextInt() == 3); // int(3.14)
+   REQUIRE(*scanner.nextInt() == 4); // int(4.7)
+   REQUIRE(*scanner.nextInt() == 6); // int(6)
+}
+
+TEST_CASE("Scanner++ Test nextFloat()")
+{
+   Scanner scanner("2.5 4");
+   REQUIRE(*scanner.nextFloat() == 2.5);
+   REQUIRE(*scanner.nextFloat() == 4);
+}
+
+TEST_CASE("Scanner++ Test nextLong()")
+{
+   Scanner scanner("2147483647 2147483648 8589934592");
+   REQUIRE(*scanner.nextInt() == 2147483647);   // no overflow
+   REQUIRE(scanner.nextInt() == std::nullopt);  // overflow
+   REQUIRE(*scanner.nextLong() == 8589934592L); // 2^33
+}
+
+TEST_CASE("Scanner++ Test nextDouble()")
+{
+   Scanner scanner("9 0.125");
+   REQUIRE(*scanner.nextDouble() == 9);
+   REQUIRE(*scanner.nextDouble() == 0.125);
+}
