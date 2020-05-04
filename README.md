@@ -111,7 +111,11 @@ int main() {
 ## How to Install
 
 ### header-only copy
-This is a header-only library: just copy `src/Scanner.hpp` to your project and have fun!
+This is a header-only library.
+To keep it simple, just copy `src/Scanner.hpp` to your project and have fun!
+This way, you can just add `#include "Scanner.hpp"`.
+
+If you want to have it in your system, e.g. to use as `#include <scannerpp/Scanner.hpp>`, you need to do the following steps (next section).
 
 ### System Installation
 First, check if it passes all tests: `make test`.
