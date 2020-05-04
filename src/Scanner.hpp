@@ -203,7 +203,7 @@ public:
 
 private:
    //char nextChar(istream& _input) const noexcept
-   bool nextChar(istream& _input, char& c) const noexcept
+   bool getChar(istream& _input, char& c) const noexcept
    {
       int x = _input.get();
 
@@ -396,7 +396,7 @@ public:
 
       while (hasNextChar()) {
          char c;
-         nextChar(*input, c); // ignoring output (should be 'true', because of 'hasNextChar')
+         getChar(*input, c); // ignoring output (should be 'true', because of 'hasNextChar')
 
          if (!inSeparators(c)) {
             x = x + c;
@@ -407,7 +407,7 @@ public:
 
       while (hasNextChar()) {
          char c;
-         nextChar(*input, c); // ignoring output (should be 'true', because of 'hasNextChar')
+         getChar(*input, c); // ignoring output (should be 'true', because of 'hasNextChar')
 
          if (inSeparators(c)) {
             input->putback(c);
@@ -433,7 +433,7 @@ public:
 
       while (hasNextChar()) {
          char c;
-         nextChar(*input, c); // ignoring output (should be 'true', because of 'hasNextChar')
+         getChar(*input, c); // ignoring output (should be 'true', because of 'hasNextChar')
 
          if (!inSeparators(c)) {
             x = x + c;
@@ -444,7 +444,7 @@ public:
 
       while (hasNextChar()) {
          char c;
-         nextChar(*input, c); // ignoring output (should be 'true', because of 'hasNextChar')
+         getChar(*input, c); // ignoring output (should be 'true', because of 'hasNextChar')
 
          if (inSeparators(c)) {
             input->putback(c);
@@ -661,7 +661,7 @@ public:
       vector<char> buffer;
 
       char novo;
-      if (!nextChar(*input, novo))
+      if (!getChar(*input, novo))
          return false; // no next (and no exception!)
 
       bool next = true;
@@ -674,7 +674,7 @@ public:
             break;
          }
 
-         if (!nextChar(*input, novo))
+         if (!getChar(*input, novo))
             return false; // no next (and no exception!)
       }
 
