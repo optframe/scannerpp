@@ -119,6 +119,25 @@ TEST_CASE("Scanner++ Test nextInt() with float cast")
    REQUIRE(*scanner.nextInt() == 6); // int(6)
 }
 
+TEST_CASE("Scanner++ Test hasNext numbers")
+{
+   Scanner scanner("3.14     6   898323932.0  898323932.0");
+   // is int?  -->   NO     YES     YES           YES
+   REQUIRE(scanner.hasNextDouble()); // 3.14, OK!
+   REQUIRE(scanner.hasNextFloat());  // 3.14, OK!
+   REQUIRE(!scanner.hasNextInt());   // 3 is NOT 3.14
+   scanner.nextInt();                // discard 3.14
+   REQUIRE(scanner.hasNextDouble()); // 6.0, OK!
+   REQUIRE(scanner.hasNextFloat());  // 6.0, OK!
+   REQUIRE(scanner.hasNextInt());    // 6, OK!
+   scanner.nextInt();                // discard 6
+   // BEWARE OF FLOAT IMPRECISION!
+   REQUIRE(scanner.hasNextFloat());              // 898323904.0 (error here, but still float)
+   REQUIRE(scanner.hasNextInt());                // 898323932, OK!
+   REQUIRE(scanner.nextFloat() == 898323904.0);  // confirming IEEE754 error (-28)
+   REQUIRE(scanner.nextDouble() == 898323932.0); // no error on double (int compared with double)
+}
+
 TEST_CASE("Scanner++ Test nextFloat()")
 {
    Scanner scanner("2.5 4");

@@ -36,18 +36,18 @@ int main() {
     Scanner scanner("Hello World");
     std::cout << scanner.next(); // returns "Hello"
     std::cout << scanner.next(); // returns "World"
-
+    //
     // (1.b) Hello World
     Scanner scanner2("Hello World");
     while(scanner2.hasNext())
         std::cout << scanner2.next() << std::endl; // "Hello\nWorld"
-
+    //
     // (1.c) Hello World
     Scanner scanner3("Hello World");
     std::string s;
     while ((s = scanner3.next()) != "")
         std::cout << s << std::endl; // "Hello\nWorld"
-   
+    //
     return 0;
 }
 ```
@@ -63,6 +63,7 @@ int main() {
     scanner.useSeparators(" ;\n\t"); // using semi-colon as separator too
     std::cout << scanner.next(); // returns "Hello"
     std::cout << scanner.next(); // returns "World"
+    //
     return 0;
 }
 ```
@@ -81,7 +82,28 @@ int main() {
     std::cout << scanner.next(); // returns "World"
     Scanner scanner2(&cin); // passing 'cin' as pointer
     std::cout << scanner2.next() << std::endl; // blocks until user inputs data
+    //
+    return 0;
+}
+```
 
+### Example 4 (reading numbers)
+```c++
+#include <scannerpp/Scanner.hpp>
+
+using namespace scannerpp;
+
+int main() {
+    Scanner scanner("-1 2147483647    2147483648    8589934592    3.14  8");
+    // remember that 'nextInt()' returns std::optional, to prevent exceptions
+    auto x1 = *scanner.nextInt();    // -1 (int)
+    auto x2 = *scanner.nextInt();    // 2147483647 (int)  (no overflow)
+    auto x3 =  scanner.nextInt();    // this is 'nullopt' (overflow!)
+    auto x4 = *scanner.nextLong();   // this is 8589934592 (long)
+    auto x5 = *scanner.nextFloat();  // this is 3.14 (float)
+    auto x6 = *scanner.nextDouble(); // this is 8.0 (double)
+    printf("%d %d %s %ld %f %f\n", x1, x2, (x3==std::nullopt?"nullopt":""), x4, x5, x6);
+    // outputs: -1 2147483647 nullopt 8589934592 3.140000 8.000000
     return 0;
 }
 ```

@@ -750,6 +750,8 @@ public:
       return hasNextX(x);
    }
 
+private:
+   // helper for 'hasNext' functions
    template<class X>
    inline bool hasNextX(X& x) const
    {
@@ -763,6 +765,7 @@ public:
       return bool(ss >> x);
    }
 
+public:
    // Returns the rest of the input as string
    std::string rest()
    {
