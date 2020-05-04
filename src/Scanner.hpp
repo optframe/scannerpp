@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <iostream>
 #include <istream>
+#include <optional>
 #include <sstream>
 #include <string>
 
@@ -85,51 +86,6 @@ public:
       filename = "";
    }
 };
-
-/*
-class ConversionError
-{
-private:
-   bool whatInfo;
-   std::string what;
-   std::string type;
-
-public:
-   ConversionError(std::string _type)
-     : whatInfo(false)
-     , what("")
-     , type(_type)
-   {
-   }
-
-   ConversionError(std::string _what, std::string _type)
-     : whatInfo(true)
-     , what(_what)
-     , type(_type)
-   {
-   }
-
-   std::string getType() const
-   {
-      return type;
-   }
-
-   std::string getWhat() const
-   {
-      return what;
-   }
-
-   std::string getMessage() const
-   {
-      stringstream ss;
-      if (whatInfo)
-         ss << "value '" << what << "' is not of '" << type << "' type";
-      else
-         ss << "conversion error for '" << type << "' type";
-      return ss.str();
-   }
-};
-*/
 
 class Scanner final
 {
@@ -246,17 +202,21 @@ public:
    }
 
 private:
-   char nextChar(istream& _input) const noexcept
+   //char nextChar(istream& _input) const noexcept
+   bool nextChar(istream& _input, char& c) const noexcept
    {
       int x = _input.get();
 
       if (x <= 0) {
          //throw ConversionError("char");
          // TODO: use bool on return and char on parameter (better than optional)
-         exit(1);
+         //exit(1);
+         return false;
       }
 
-      return x;
+      // returns char on parameter 'c' (no exception is ever thrown)
+      c = x;
+      //return x;
    }
 
    void put_back(istream** input, string back) const
@@ -282,25 +242,6 @@ private:
    }
 
 public:
-   // returns filename, if some file is open
-   string filename() const noexcept
-   {
-      return inputfile ? inputfile->filename : "";
-   }
-
-   string getDiscarded() const
-   {
-      return discarded;
-   }
-
-   bool hasNextChar() const;
-   char nextChar();
-
-   bool nextCharIs(char c) const;
-   bool nextCharIn(string s) const;
-
-   void trimInput();
-
    // useDefaultSeparators: chama o useSeparators para os caracteres:
    // espaco, quebra de linha (\n), tabulacao (\t) e retorno de carro (\r)
 
@@ -320,8 +261,127 @@ public:
       sep = s;
    }
 
-   bool inSeparators(char c) const;
+   bool inSeparators(char c) const noexcept
+   {
+      for (unsigned int i = 0; i < sep.length(); i++)
+         if (sep[i] == c)
+            return true;
+      return false;
+   }
 
+   // returns filename, if some file is open
+   string filename() const noexcept
+   {
+      return inputfile ? inputfile->filename : "";
+   }
+
+   string getDiscarded() const
+   {
+      return discarded;
+   }
+
+public:
+   // public interfaces: nextChar and hasNextChar
+
+   bool hasNextChar() const noexcept
+   {
+      if (input->eof())
+         return false;
+
+      int x = input->peek();
+
+      if (input->fail()) {
+         //cout << "WARNING::SCANNER FAILED!" << endl;
+         return false;
+      }
+
+      if (x > 0)
+         return true;
+
+      if (x == 0)
+         return false;
+
+      return false;
+   }
+
+   std::optional<char> nextChar()
+   {
+      int x = input->get();
+
+      if (x <= 0)
+         //throw ConversionError("char");
+         return std::nullopt;
+
+      return std::make_optional(x);
+   }
+
+   bool nextCharIs(char c) const
+   {
+      stringstream ss;
+      ss << c;
+      string s = ss.str();
+
+      return nextCharIn(s);
+   }
+
+   bool nextCharIn(string s) const
+   {
+      if (!hasNextChar())
+         return false;
+
+      bool r = false;
+
+      int x = input->get();
+
+      if (x > 0) {
+         char c = x;
+
+         for (unsigned i = 0; i < s.length(); i++)
+            if (c == s.at(i)) {
+               r = true;
+               break;
+            }
+      }
+
+      input->putback((char)x);
+
+      return r;
+   }
+
+private:
+   void trimInput() noexcept
+   {
+      string s = " \t\n";
+
+      if (!hasNextChar())
+         return;
+
+      int x = input->get();
+
+      while (x > 0) {
+         char c = x;
+
+         bool t = false;
+
+         for (unsigned i = 0; i < s.length(); i++)
+            if (c == s.at(i)) {
+               t = true;
+               break;
+            }
+
+         if (!t) {
+            input->putback((char)x);
+            return;
+         }
+
+         if (!hasNextChar())
+            return;
+
+         x = input->get();
+      }
+   }
+
+public:
    std::string peekNext() const;
    std::string next();
    std::string nextLine();
