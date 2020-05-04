@@ -93,11 +93,13 @@ TEST_CASE("Scanner++ Test nextInt() with basic separators")
 
 TEST_CASE("Scanner++ Test nextInt() with custom separators")
 {
-   Scanner scanner("1  , X 2\t3");
-   scanner.useSeparators(" ,X\t");
+   Scanner scanner("1  , X 2\t3\n4.5");
+   scanner.useSeparators(" ,X\t.\n");
    REQUIRE(*scanner.nextInt() == 1);
    REQUIRE(*scanner.nextInt() == 2);
    REQUIRE(*scanner.nextInt() == 3);
+   REQUIRE(*scanner.nextInt() == 4);
+   REQUIRE(*scanner.nextInt() == 5);
 }
 
 TEST_CASE("Scanner++ Test nextInt() negative and positive")
