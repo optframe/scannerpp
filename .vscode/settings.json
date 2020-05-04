@@ -5,6 +5,8 @@
     },
     "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle : Mozilla , ColumnLimit : 0, IndentWidth: 3, AccessModifierOffset: -3}",
     "files.associations": {
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "__config": "cpp",
+        "__nullptr": "cpp"
     }
 }

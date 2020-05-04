@@ -11,7 +11,6 @@
 using namespace std;
 using namespace scannerpp;
 
-
 TEST_CASE("Scanner++ Test Open File 'test-1.txt'")
 {
    File file("testbase/test-1.txt");
@@ -24,15 +23,23 @@ TEST_CASE("Scanner++ Test Open File 'test-do-not-exist.txt'")
    REQUIRE(!file2.isOpen());
 }
 
-
 TEST_CASE("Scanner++ Test Open File 'test-1.txt' and move")
 {
    File file3("testbase/test-1.txt");
    REQUIRE(file3.isOpen());
    File file4 = std::move(file3);
+   // file3 should be closed and file4 open
+   REQUIRE(!file3.isOpen());
+   REQUIRE(file4.isOpen());
+   // filename should be moved
    REQUIRE(file4.filename == "testbase/test-1.txt");
 }
 
+TEST_CASE("Scanner++ Test Open File 'test-1.txt' in Scanner")
+{
+   Scanner scanfile(File("testbase/test-1.txt"));
+   REQUIRE(scanfile.filename() == "testbase/test-1.txt");
+}
 
 TEST_CASE("Scanner++ Test String Hello World")
 {

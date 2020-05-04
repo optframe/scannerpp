@@ -18,14 +18,14 @@ using namespace std; // TODO: remove!
 
 namespace scannerpp {
 
-class File
+class File final
 {
 public:
    std::ifstream* file{ nullptr };
    std::string filename;
 
    // standard constructive: pass 'filename'
-   File(std::string _filename)
+   File(std::string _filename) noexcept
      : filename(_filename)
    {
       // check if file exists
@@ -38,14 +38,16 @@ public:
       }
    }
 
+   /*
    // empty file (not open)
    File()
      : filename("")
    {
    }
+*/
 
    // move constructor
-   File(File&& f)
+   File(File&& f) noexcept
      : file(f.file)
      , filename(f.filename)
    {
@@ -53,7 +55,7 @@ public:
       f.filename = "";
    }
 
-   virtual ~File()
+   ~File() noexcept
    {
       close();
       if (file)
@@ -61,28 +63,30 @@ public:
    }
 
    // returns 'true' if file is open
-   bool isOpen()
+   bool isOpen() noexcept
    {
       return file != nullptr;
    }
 
-   int get()
+   int get() noexcept
    {
       return file && file->get();
    }
 
-   bool eof()
+   bool eof() noexcept
    {
       return file && file->eof();
    }
 
-   void close()
+   void close() noexcept
    {
       if (file)
          file->close();
+      filename = "";
    }
 };
 
+/*
 class ConversionError
 {
 private:
@@ -125,12 +129,13 @@ public:
       return ss.str();
    }
 };
+*/
 
-class Scanner
+class Scanner final
 {
 private:
-   istream* input;
-   File* inputfile;
+   istream* input{ nullptr };
+   File* inputfile{ nullptr };
    string sep;
    bool isString;
 
@@ -138,8 +143,110 @@ private:
 
    string contentString;
 
+public:
+   Scanner(File&& f) noexcept
+   {
+      isString = false;
+      this->inputfile = new File(std::move(f));
+      this->input = inputfile->file;
+      useDefaultSeparators();
+   }
+
+   Scanner(std::istream* input) noexcept
+   {
+      isString = false;
+      this->inputfile = nullptr;
+      this->input = input;
+      useDefaultSeparators();
+   }
+
+   Scanner(std::string input) noexcept
+   {
+      isString = true;
+      this->inputfile = nullptr;
+      this->contentString = input;
+      this->input = new std::istringstream(input);
+      useDefaultSeparators();
+   }
+
+   // copy constructor
+   Scanner(const Scanner& scanner) noexcept
+   {
+      contentString = scanner.contentString;
+      isString = scanner.isString;
+      discarded = scanner.discarded;
+
+      if (scanner.inputfile) //for files
+      {
+         inputfile = new File(scanner.inputfile->filename);
+         input = inputfile->file;
+      }
+
+      if (isString) // for string
+         input = new istringstream(contentString);
+
+      if (!isString) // for cin
+         input = scanner.input;
+
+      useDefaultSeparators();
+   }
+
+   ~Scanner() noexcept
+   {
+      if (inputfile) {
+         delete inputfile;
+         inputfile = nullptr;
+         input = nullptr;
+      }
+
+      if (input && isString) {
+         delete input;
+      }
+   }
+
+   Scanner& operator=(const Scanner& scanner) noexcept
+   {
+      if (&scanner == this) // auto ref check
+         return *this;
+
+      // ==========
+      // destructor
+      // ==========
+
+      if (inputfile) {
+         delete inputfile;
+         inputfile = nullptr;
+         input = nullptr;
+      }
+
+      if (input && isString) {
+         delete input;
+      }
+      // ==========
+
+      contentString = scanner.contentString;
+      isString = scanner.isString;
+      discarded = scanner.discarded;
+
+      if (scanner.inputfile) //for files
+      {
+         inputfile = new File(scanner.inputfile->filename);
+         input = inputfile->file;
+      }
+
+      if (isString) // for string
+         input = new istringstream(contentString);
+
+      if (!isString) // for cin
+         input = scanner.input;
+
+      useDefaultSeparators();
+
+      return *this;
+   }
+
 private:
-   char nextChar(istream& _input) const
+   char nextChar(istream& _input) const noexcept
    {
       int x = _input.get();
 
@@ -175,6 +282,12 @@ private:
    }
 
 public:
+   // returns filename, if some file is open
+   string filename() const noexcept
+   {
+      return inputfile ? inputfile->filename : "";
+   }
+
    string getDiscarded() const
    {
       return discarded;
@@ -188,20 +301,13 @@ public:
 
    void trimInput();
 
-   Scanner(File* inputfile);
-   Scanner(istream* input);
-   Scanner(string input);
-
-   Scanner(const Scanner& scanner);
-
-   virtual ~Scanner();
-
-   virtual Scanner& operator=(const Scanner& scanner);
-
    // useDefaultSeparators: chama o useSeparators para os caracteres:
    // espaco, quebra de linha (\n), tabulacao (\t) e retorno de carro (\r)
 
-   void useDefaultSeparators();
+   void useDefaultSeparators()
+   {
+      useSeparators(string("\n\r\t "));
+   }
 
    // useSeparators: equivalente ao useDelimiter de Java
    // a diferenca e que Java trata a string como uma
@@ -209,7 +315,11 @@ public:
    // apenas considera cada caractere da string separadamente
    // como um separador.
 
-   void useSeparators(string s);
+   void useSeparators(string s)
+   {
+      sep = s;
+   }
+
    bool inSeparators(char c) const;
 
    std::string peekNext() const;
@@ -343,6 +453,6 @@ public:
    string rest(); // Returns the rest of the input as string
 };
 
-} // end namespace scannerpp
+} // namespace scannerpp
 
 #endif /*SCANNERPP_SCANNER_HPP_*/
