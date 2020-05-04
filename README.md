@@ -5,7 +5,7 @@ The idea of this project is to have (Java) Scanner functionalities on C++.
 
 ## Current and Legacy versions
 
-Current version is `1.0-alpha`, located on `./src` folder, and licensed `MIT`.
+Current version is `1.0`, located on `./src` folder, and licensed `MIT`.
 
 Note that previous version `0.98-alpha`, located on `./legacy`, was licensed `LGPLv3` (project previously ported from SourceForge: https://sourceforge.net/projects/scannerpp/).
 
