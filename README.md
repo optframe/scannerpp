@@ -110,6 +110,10 @@ int main() {
 
 ## How to Install
 
+### header-only copy
+This is a header-only library: just copy `src/Scanner.hpp` to your project and have fun!
+
+### System Installation
 First, check if it passes all tests: `make test`.
 
 After, just type `make install` (this will require `sudo`).
