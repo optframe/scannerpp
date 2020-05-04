@@ -140,3 +140,8 @@ TEST_CASE("Scanner++ Test nextDouble()")
    REQUIRE(*scanner.nextDouble() == 9);
    REQUIRE(*scanner.nextDouble() == 0.125);
 }
+
+TEST_CASE("Scanner++ Test trim()")
+{
+   REQUIRE(Scanner::trim(" \t \n  Hello  World \n \t ") == "Hello  World");
+}
