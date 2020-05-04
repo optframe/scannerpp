@@ -42,6 +42,12 @@ int main() {
     while(scanner2.hasNext())
         std::cout << scanner2.next() << std::endl; // "Hello\nWorld"
 
+    // (1.c) Hello World
+    Scanner scanner3("Hello World");
+    std::string s;
+    while ((s = scanner3.next()) != "")
+        std::cout << s << std::endl; // "Hello\nWorld"
+   
     return 0;
 }
 ```

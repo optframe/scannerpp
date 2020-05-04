@@ -66,3 +66,17 @@ TEST_CASE("Scanner++ Test File Hello World")
    REQUIRE(scanfile.next() == "Hello");
    REQUIRE(scanfile.next() == "World");
 }
+
+TEST_CASE("Scanner++ Test String Hello World in Loop")
+{
+   Scanner scanner("Hello World");
+   std::string s;
+   while ((s = scanner.next()) != "")
+      REQUIRE(s.length() == 5); // "Hello", then "World"
+   //
+   std::stringstream ss;
+   Scanner scanner2("Hello World");
+   while ((s = scanner2.next()) != "")
+      ss << s; // "Hello", then "World"
+   REQUIRE(ss.str() == "HelloWorld");
+}
