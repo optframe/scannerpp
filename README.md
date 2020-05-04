@@ -27,7 +27,7 @@ Exceptions are now deprecated, so every `next()` operation will return an `optio
 
 Example 1 (default separators):
 ```c++
-#include "Scanner.hpp"
+#include <scannerpp/Scanner.hpp>
 
 using namespace scannerpp;
 
@@ -54,7 +54,7 @@ int main() {
 
 Example 2 (other separators):
 ```c++
-#include "Scanner.hpp"
+#include <scannerpp/Scanner.hpp>
 
 using namespace scannerpp;
 
@@ -67,6 +67,20 @@ int main() {
 }
 ```
 
+## How to Install
+
+On Linux, just type `make install` (this will require `sudo`).
+File will be installed on `/usr/local/include/scannerpp`.
+
+After that, `make test-install`, should execute:
+```
+g++ --std=c++17 test-install.cpp -o scannerpp_test_install
+./scannerpp_test_install
+Hello
+World
+```
+
+## License
 
 MIT License
 
