@@ -4,3 +4,4 @@ scannerpp_test_install
 *.gcda
 *.gcno
 reports
+build/

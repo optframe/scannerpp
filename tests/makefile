@@ -14,6 +14,10 @@ test-coverage:
 	lcov --directory . --capture --output-file reports/app.info
 	(cd reports && genhtml app.info)
 
+bench:
+	mkdir -p build
+	g++ -fno-exceptions -std=c++17 -Ofast -I../libs/ bench.cpp -o build/app_bench
+
 clean:
 	rm -f *.gcda
 	rm -f *.gcno

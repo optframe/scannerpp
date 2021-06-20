@@ -1,9 +1,15 @@
 {
     "[cpp]": {
-        "editor.tabSize" : 3,
+        "editor.tabSize": 3,
         "editor.detectIndentation": false
     },
     "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle : Mozilla , ColumnLimit : 0, IndentWidth: 3, AccessModifierOffset: -3}",
+    "editor.formatOnSave": true,
+    "clang-tidy.compilerArgsBefore": [
+        "-Isrc/",
+        "-Ilibs/",
+        "-std=c++17",
+    ],
     "files.associations": {
         "iostream": "cpp",
         "__config": "cpp",
@@ -79,6 +85,9 @@
         "ios": "cpp",
         "locale": "cpp",
         "queue": "cpp",
-        "stack": "cpp"
+        "stack": "cpp",
+        "bit": "cpp",
+        "shared_mutex": "cpp",
+        "cinttypes": "cpp"
     }
 }
