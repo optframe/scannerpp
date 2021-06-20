@@ -18,7 +18,7 @@
 
 #include <stdlib.h>
 
-using namespace std; // TODO: remove!
+//using namespace std; // TODO: remove!
 
 namespace scannerpp {
 
@@ -93,14 +93,14 @@ public:
 class Scanner final
 {
 private:
-   istream* input{ nullptr };
+   std::istream* input{ nullptr };
    File* inputfile{ nullptr };
-   string sep;
+   std::string sep;
    bool isString;
 
-   string discarded;
+   std::string discarded;
 
-   string contentString;
+   std::string contentString;
 
 public:
    Scanner(File&& f) noexcept
@@ -112,7 +112,7 @@ public:
          this->inputfile = new File(std::move(f));
          this->input = inputfile->filestream;
       } else {
-         // file is not fine: fallback to empty string
+         // file is not fine: fallback to empty std::string
          isString = true;
          this->contentString = "";
          this->input = new std::istringstream(this->contentString);
@@ -148,8 +148,8 @@ public:
          input = inputfile->filestream;
       }
 
-      if (isString) // for string
-         input = new istringstream(contentString);
+      if (isString) // for std::string
+         input = new std::istringstream(contentString);
 
       if (!isString) // for cin
          input = scanner.input;
@@ -200,8 +200,8 @@ public:
          input = inputfile->filestream;
       }
 
-      if (isString) // for string
-         input = new istringstream(contentString);
+      if (isString) // for std::string
+         input = new std::istringstream(contentString);
 
       if (!isString) // for cin
          input = scanner.input;
@@ -212,8 +212,8 @@ public:
    }
 
 private:
-   //char nextChar(istream& _input) const noexcept
-   bool getChar(istream& _input, char& c) const noexcept
+   //char nextChar(std::istream& _input) const noexcept
+   bool getChar(std::istream& _input, char& c) const noexcept
    {
       int x = _input.get();
 
@@ -230,22 +230,22 @@ private:
       return true;
    }
 
-   void put_back(istream** input, string back) const
+   void put_back(std::istream** input, std::string back) const
    {
       if ((*input)->eof()) {
-         // change internal pointer to a renewed istream
+         // change internal pointer to a renewed std::istream
          delete (*input);
-         (*input) = new istringstream(back);
+         (*input) = new std::istringstream(back);
       } else {
          // just return everything back!
 
          for (int i = ((int)back.length()) - 1; i >= 0; i--) {
             (*input)->putback(back[i]);
             if ((*input)->fail()) {
-               cout << "SCANNER ERROR PUTTING BACK CHAR '" << back[i] << "'" << endl;
-               cout << "eof bit: '" << (*input)->eof() << "'" << endl;
-               cout << "bad bit: '" << (*input)->bad() << "'" << endl;
-               cout << "fail bit: '" << (*input)->fail() << "'" << endl;
+               std::cout << "SCANNER ERROR PUTTING BACK CHAR '" << back[i] << "'" << std::endl;
+               std::cout << "eof bit: '" << (*input)->eof() << "'" << std::endl;
+               std::cout << "bad bit: '" << (*input)->bad() << "'" << std::endl;
+               std::cout << "fail bit: '" << (*input)->fail() << "'" << std::endl;
                exit(1);
             }
          }
@@ -258,16 +258,16 @@ public:
 
    void useDefaultSeparators()
    {
-      useSeparators(string("\n\r\t "));
+      useSeparators(std::string("\n\r\t "));
    }
 
    // useSeparators: equivalente ao useDelimiter de Java
-   // a diferenca e que Java trata a string como uma
+   // a diferenca e que Java trata a std::string como uma
    // expressao regular, e neste caso o useSeparators
-   // apenas considera cada caractere da string separadamente
+   // apenas considera cada caractere da std::string separadamente
    // como um separador.
 
-   void useSeparators(string s)
+   void useSeparators(std::string s)
    {
       sep = s;
    }
@@ -284,7 +284,7 @@ public:
    // inspecting file properties
 
    // returns filename, if some file is open
-   string filename() const noexcept
+   std::string filename() const noexcept
    {
       return inputfile ? inputfile->filename : "";
    }
@@ -297,7 +297,7 @@ public:
 
 public:
    // helper for discarded text on 'next'
-   string getDiscarded() const
+   std::string getDiscarded() const
    {
       return discarded;
    }
@@ -313,7 +313,7 @@ public:
       int x = input->peek();
 
       if (input->fail()) {
-         //cout << "WARNING::SCANNER FAILED!" << endl;
+         //cout << "WARNING::SCANNER FAILED!"  << std::endl;
          return false;
       }
 
@@ -339,14 +339,14 @@ public:
 
    bool nextCharIs(char c) const
    {
-      stringstream ss;
+      std::stringstream ss;
       ss << c;
-      string s = ss.str();
+      std::string s = ss.str();
 
       return nextCharIn(s);
    }
 
-   bool nextCharIn(string s) const
+   bool nextCharIn(std::string s) const
    {
       if (!hasNextChar())
          return false;
@@ -374,7 +374,7 @@ public:
    // helper function that can be used externally to "clean" stream data
    void trimInput() noexcept
    {
-      string s = " \t\n";
+      std::string s = " \t\n";
 
       if (!hasNextChar())
          return;
@@ -405,7 +405,7 @@ public:
    }
 
 public:
-   // next methods: for string
+   // next methods: for std::string
    std::string peekNext() const noexcept
    {
       if (input->eof())
@@ -415,7 +415,7 @@ public:
 
       std::string x = "";
 
-      istream* input = const_cast<istream*>(this->input);
+      std::istream* input = const_cast<std::istream*>(this->input);
 
       while (hasNextChar()) {
          char c;
@@ -442,7 +442,7 @@ public:
 
       discarded.append(x);
 
-      put_back(const_cast<istream**>(&this->input), discarded);
+      put_back(const_cast<std::istream**>(&this->input), discarded);
 
       return x;
    }
@@ -484,9 +484,9 @@ public:
 
    std::string nextLine() noexcept
    {
-      string backup_sep = sep;
+      std::string backup_sep = sep;
       useSeparators("\n");
-      string linha = next();
+      std::string linha = next();
       useSeparators(backup_sep);
 
       return linha;
@@ -497,7 +497,7 @@ public:
    std::optional<int> nextInt() noexcept
    {
       int x;
-      istringstream myStream(next());
+      std::istringstream myStream(next());
       if (myStream >> x)
          return std::make_optional(x);
       else
@@ -508,7 +508,7 @@ public:
    std::optional<long> nextLong() noexcept
    {
       long x;
-      istringstream myStream(next());
+      std::istringstream myStream(next());
       if (myStream >> x)
          return std::make_optional(x);
       else
@@ -519,7 +519,7 @@ public:
    std::optional<float> nextFloat() noexcept
    {
       float x;
-      istringstream myStream(next());
+      std::istringstream myStream(next());
       if (myStream >> x)
          return std::make_optional(x);
       else
@@ -530,7 +530,7 @@ public:
    std::optional<double> nextDouble() noexcept
    {
       double x;
-      istringstream myStream(next());
+      std::istringstream myStream(next());
       if (myStream >> x)
          return std::make_optional(x);
       else
@@ -562,14 +562,14 @@ public:
       return (c == ' ') || (c == '\t') || (c == '\n');
    }
 
-   static string trim(string word) noexcept
+   static std::string trim(std::string word) noexcept
    {
       if (word.length() == 0)
          return "";
 
       int i = 0;
       char c = word.at(i);
-      string aux_word = "";
+      std::string aux_word = "";
 
       //removing initial spaces
       while (trimChar(c) && (i < ((int)word.length()) - 1)) {
@@ -610,9 +610,9 @@ public:
 
 public:
    // XML method: it can segfault! beware!
-   pair<string, map<string, string>> nextXMLTag()
+   std::pair<std::string, std::map<std::string, std::string>> nextXMLTag()
    {
-      string x = "";
+      std::string x = "";
 
       while (hasNextChar()) {
          char c = *nextChar();
@@ -631,20 +631,20 @@ public:
             break;
       }
 
-      cout << "base: " << x << endl;
+      std::cout << "base: " << x << std::endl;
 
       if (x.size() < 2 || x.at(0) != '<' || x.at(x.size() - 1) != '>')
-         return make_pair("", map<string, string>());
+         return make_pair("", std::map<std::string, std::string>());
 
       Scanner scanner(x);
       scanner.useSeparators("<>");
 
-      string tagname = "";
-      map<string, string> attr;
+      std::string tagname = "";
+      std::map<std::string, std::string> attr;
 
       if (scanner.hasNext()) {
-         string tag = scanner.next();
-         //cout << "tag: " << tag << endl;
+         std::string tag = scanner.next();
+         //cout << "tag: " << tag  << std::endl;
 
          Scanner sc_tag(tag);
          sc_tag.useSeparators(" ");
@@ -652,17 +652,17 @@ public:
          if (sc_tag.hasNext())
             tagname = sc_tag.next();
 
-         //cout << "tagname: " << tagname << endl;
+         //cout << "tagname: " << tagname  << std::endl;
 
          // TODO usar trim
 
          sc_tag.useSeparators(" =");
          while (sc_tag.hasNext()) {
-            string at_name = sc_tag.next();
+            std::string at_name = sc_tag.next();
             //cout << "at_name: " << at_name << "\t";
             sc_tag.useSeparators("=\"");
 
-            string at_value = sc_tag.next();
+            std::string at_value = sc_tag.next();
             //cout << "at_value: " << at_value << "\t";
 
             attr[at_name] = at_value;
@@ -682,9 +682,9 @@ public:
       if (!hasNextChar())
          return false;
 
-      istream* input = const_cast<istream*>(this->input);
+      std::istream* input = const_cast<std::istream*>(this->input);
 
-      vector<char> buffer;
+      std::vector<char> buffer;
 
       char novo;
       if (!getChar(*input, novo))
@@ -760,7 +760,7 @@ private:
    template<class X>
    inline bool hasNextX(X& x) const
    {
-      string s = peekNext();
+      std::string s = peekNext();
 
       if (s == "")
          return false;
@@ -771,14 +771,14 @@ private:
    }
 
 public:
-   // Returns the rest of the input as string
+   // Returns the rest of the input as std::string
    std::string rest()
    {
-      string backup_sep = sep;
+      std::string backup_sep = sep;
 
       useSeparators("");
 
-      string rest = "";
+      std::string rest = "";
 
       if (hasNext())
          rest = next();
