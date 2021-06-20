@@ -273,3 +273,31 @@ BENCHMARK(bench_anti_expected_int_int)
   ->Args({ 100 })  // N = 100
   ->Args({ 1000 }) // N = 1000
   ;
+
+// Shared results here: https://github.com/TartanLlama/expected/issues/16#issuecomment-864481060
+/*
+---------------------------------------------------------------------------
+Benchmark                                 Time             CPU   Iterations
+---------------------------------------------------------------------------
+bench_direct_int/10                    20.0 ns         20.0 ns     33642583
+bench_direct_int/100                    325 ns          325 ns      2139287
+bench_direct_int/1000                  2856 ns         2856 ns       231017
+bench_optional_int/10                   112 ns          112 ns      6285042
+bench_optional_int/100                 1122 ns         1122 ns       623029
+bench_optional_int/1000               11230 ns        11228 ns        62272
+bench_expected_int/10                  20.4 ns         20.4 ns     34017431
+bench_expected_int/100                  273 ns          272 ns      2567835
+bench_expected_int/1000                2845 ns         2844 ns       245888
+bench_expected_int_int/10               113 ns          113 ns      6263497
+bench_expected_int_int/100             1122 ns         1122 ns       623436
+bench_expected_int_int/1000           11231 ns        11229 ns        62318
+bench_anti_optional_int/10             53.4 ns         53.3 ns     13084551
+bench_anti_optional_int/100             533 ns          533 ns      1313907
+bench_anti_optional_int/1000           5356 ns         5355 ns       130663
+bench_anti_expected_int/10             40.0 ns         40.0 ns     17492936
+bench_anti_expected_int/100             342 ns          342 ns      2043960
+bench_anti_expected_int/1000           3364 ns         3364 ns       208186
+bench_anti_expected_int_int/10         70.1 ns         70.1 ns      9987318
+bench_anti_expected_int_int/100         697 ns          697 ns      1001805
+bench_anti_expected_int_int/1000       6971 ns         6970 ns       100324
+*/
