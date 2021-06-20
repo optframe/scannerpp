@@ -6,7 +6,7 @@
 // Some instructions for Catch2
 // https://github.com/catchorg/Catch2/blob/master/docs/test-cases-and-sections.md
 
-#include "../src/Scanner.hpp"
+#include "../include/Scanner.hpp"
 
 using namespace std;
 using namespace scannerpp;
