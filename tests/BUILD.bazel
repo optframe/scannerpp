@@ -8,7 +8,7 @@ cc_binary(
     name = "app_bench",
     srcs = ["bench.cpp"],
     copts = ['-std=c++17', '-Wfatal-errors', '-fno-exceptions', '-Ofast', '-DNDEBUG', '-DCMAKE_BUILD_TYPE=Release'],
-    deps = ["@gbenchmark//:benchmark", "//libs/tl:expected_lib"],
+    deps = ["@gbenchmark//:benchmark", "//libs/tl:expected_lib", "//include/scannerpp:scannerpp_lib"],
     # remember to: bazel build ... --cxxopt='-DNDEBUG'
     #
     # otherwise gbenchmark will warn: '***WARNING*** Library was built as DEBUG. Timings may be affected.'

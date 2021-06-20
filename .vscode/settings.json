@@ -6,8 +6,9 @@
     "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle : Mozilla , ColumnLimit : 0, IndentWidth: 3, AccessModifierOffset: -3}",
     "editor.formatOnSave": true,
     "clang-tidy.compilerArgsBefore": [
-        "-Isrc/",
+        "-Iinclude/",
         "-Ilibs/",
+        "-Itests/thirdparty/",
         "-std=c++17",
     ],
     "files.associations": {
