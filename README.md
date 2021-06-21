@@ -1,10 +1,11 @@
 # This is Scanner++ Library
 
 The idea of this project is to have (Java) Scanner functionalities on C++.
+This is an experimental library in Header Only format (just add `Scanner.hpp` to your project and that's it!).
 
 ## Build with Conan + Bazel
 
-This project tries to use both Conan and Bazel.
+This project tries to use both Conan and Bazel (during tests and benchmarks, not production).
 By Conan, the files at `conandeps` are created in a compatible manner with Bazel.
 
 ### Dependencies
