@@ -1,2 +1,8 @@
 *~
 bazel-*
+conandeps/
+conan.lock
+conanbuild.json
+conanbuildinfo.txt
+conaninfo.txt
+graph_info.json

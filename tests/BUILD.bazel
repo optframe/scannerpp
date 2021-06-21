@@ -8,17 +8,13 @@ cc_binary(
     name = "app_bench",
     srcs = ["bench.cpp"],
     copts = ['-std=c++17', '-Wfatal-errors', '-fno-exceptions', '-Ofast', '-DNDEBUG', '-DCMAKE_BUILD_TYPE=Release'],
-    deps = ["@gbenchmark//:benchmark", "//libs/tl:expected_lib", "//include/scannerpp:scannerpp_lib"],
+    #deps = ["@gbenchmark//:benchmark", "//libs/tl:expected_lib", "//include/scannerpp:scannerpp_lib"],
+    deps = ["@gbenchmark//:benchmark", "@tl-expected//:tl-expected", "//include/scannerpp:scannerpp_lib"],
+    #
     # remember to: bazel build ... --cxxopt='-DNDEBUG'
     #
     # otherwise gbenchmark will warn: '***WARNING*** Library was built as DEBUG. Timings may be affected.'
 )
-
-#cc_library(
-#    name = "expected",
-#    hdrs = ["//libs/tl/expected.hpp"]
-#)
-
 
 # Bazel finer grained C++ dependency types
 # https://docs.google.com/document/d/1WW4iY3-74DVSX9wD3TiznrUIs7vybrxkj1U22JmWIrI/edit
