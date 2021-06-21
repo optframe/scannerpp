@@ -4,12 +4,16 @@
         "editor.detectIndentation": false
     },
     "C_Cpp.clang_format_fallbackStyle": "{ BasedOnStyle : Mozilla , ColumnLimit : 0, IndentWidth: 3, AccessModifierOffset: -3}",
+    "C_Cpp.default.compilerArgs": [
+        "-std=c++17"
+    ],
     "editor.formatOnSave": true,
     "clang-tidy.compilerArgsBefore": [
         "-Iinclude/",
         "-Ilibs/",
         "-Itests/thirdparty/",
         "-std=c++17",
+        "-I/home/imcoelho/.conan/data/tl-expected/20190710/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include"
     ],
     "files.associations": {
         "iostream": "cpp",
