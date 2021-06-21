@@ -9,7 +9,12 @@ cc_binary(
     srcs = ["bench.cpp"],
     copts = ['-std=c++17', '-Wfatal-errors', '-fno-exceptions', '-Ofast', '-DNDEBUG', '-DCMAKE_BUILD_TYPE=Release'],
     #deps = ["@gbenchmark//:benchmark", "//libs/tl:expected_lib", "//include/scannerpp:scannerpp_lib"],
-    deps = ["@gbenchmark//:benchmark", "@tl-expected//:tl-expected", "//include/scannerpp:scannerpp_lib"],
+    #
+    #deps = ["@gbenchmark//:benchmark", "@tl-expected//:tl-expected", "//include/scannerpp:scannerpp_lib"],
+    deps = ["@benchmark//:benchmark", "@tl-expected//:tl-expected", "//include/scannerpp:scannerpp_lib"]
+    #,
+    #"@benchmark//:benchmark_precompiled","@benchmark//:benchmark_main_precompiled"],
+    #
     #
     # remember to: bazel build ... --cxxopt='-DNDEBUG'
     #

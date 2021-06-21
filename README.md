@@ -2,6 +2,53 @@
 
 The idea of this project is to have (Java) Scanner functionalities on C++.
 
+## Build with Conan + Bazel
+
+This project tries to use both Conan and Bazel.
+By Conan, the files at `conandeps` are created in a compatible manner with Bazel.
+
+### Dependencies
+
+`conan search benchmark -r conan-center`
+
+`conan search tl-expected -r conan-center`
+
+### Conan + Bazel
+
+Google benchmark requires `D_GLIBCXX_USE_CXX11_ABI` [see issue](https://github.com/google/benchmark/issues/897):
+
+```
+pip install conan
+conan install . -s compiler.libcxx=libstdc++11
+```
+
+At `conandeps/benchmark/BUILD`, add this into `cc_library`:
+
+```
+    deps = [":benchmark_precompiled"],
+    linkopts = ["-lpthread"],
+```
+
+This prevents link issue with `-lbenchmark` (`libbenchmark.a`).
+
+```
+cd tests
+./run_bench.sh
+```
+
+If this doesn't work, `make bench2` could be manually executed, such as:
+
+```
+g++-9 -g -D_GLIBCXX_USE_CXX11_ABI=0 --std=c++17 -DNDEBUG bench.cpp -I/home/imcoelho/.conan/data/tl-expected/20190710/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include -I/home/imcoelho/.conan/data/benchmark/1.5.3/_/_/package/9ec7e6c55ee108e231bdef75e23776b8b86d821d/include -L/home/imcoelho/.conan/data/benchmark/1.5.3/_/_/package/9ec7e6c55ee108e231bdef75e23776b8b86d821d/lib -lbenchmark -pthread 
+```
+
+### Listing dependencies
+
+```
+bazel query 'labels(hdrs, @tl-expected//...)'
+bazel query 'labels(hdrs, @benchmark//...)'
+bazel query 'labels(hdrs, ...)'
+```
 
 ## Current and Legacy versions
 

@@ -1,10 +1,13 @@
 load('@bazel_tools//tools/build_defs/repo:git.bzl', 'git_repository')
-git_repository(
-    name='gbenchmark',
-    remote='https://github.com/google/benchmark.git',
-    #branch='master',
-    tag = "v1.5.5",
-)
+
+#
+#git_repository(
+#    name='gbenchmark',
+#    remote='https://github.com/google/benchmark.git',
+#    #branch='master',
+#    tag = "v1.5.5",
+#)
+
 
 # depends on 'conanfile.py' and conan v1.37.0+ (since jun/2021)
 # conan install .

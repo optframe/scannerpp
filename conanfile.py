@@ -25,4 +25,4 @@ class BazelExampleConan(ConanFile):
     #
     # see: https://docs.conan.io/en/latest/reference/conanfile/tools/google.html
     generators = "BazelDeps", "BazelToolchain"
-    build_requires = "tl-expected/20190710"
+    build_requires = ["tl-expected/20190710", "benchmark/1.5.3"]

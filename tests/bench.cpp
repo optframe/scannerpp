@@ -9,9 +9,6 @@
 
 #include <benchmark/benchmark.h>
 
-// initializes MAIN
-BENCHMARK_MAIN();
-
 using namespace std;
 
 std::optional<int>
@@ -302,3 +299,6 @@ bench_anti_expected_int_int/10         70.1 ns         70.1 ns      9987318
 bench_anti_expected_int_int/100         697 ns          697 ns      1001805
 bench_anti_expected_int_int/1000       6971 ns         6970 ns       100324
 */
+
+// initializes MAIN
+BENCHMARK_MAIN();
