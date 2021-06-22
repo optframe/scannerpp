@@ -16,14 +16,24 @@ By Conan, the files at `conandeps` are created in a compatible manner with Bazel
 
 ### Conan + Bazel
 
+```
+pip install conan
+```
+
 Google benchmark requires `D_GLIBCXX_USE_CXX11_ABI` [see issue](https://github.com/google/benchmark/issues/897):
 
 ```
-pip install conan
 conan install . -s compiler.libcxx=libstdc++11
 ```
 
-At `conandeps/benchmark/BUILD`, add this into `cc_library`:
+or install in local `conan_cache` folder:
+
+``` 
+mkdir -p conan_cache && export CONAN_USER_HOME=${PWD}/conan_cache && conan install . -s compiler.libcxx=libstdc++11
+```
+
+
+At `conandeps/benchmark/BUILD`, small fix, add these into `cc_library`:
 
 ```
     deps = [":benchmark_precompiled"],

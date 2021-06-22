@@ -14,8 +14,8 @@
         "-Ilibs/",
         "-Itests/thirdparty/",
         "-std=c++17",
-        "-I/home/imcoelho/.conan/data/tl-expected/20190710/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include",
-        "-I/home/imcoelho/.conan/data/benchmark/1.5.3/_/_/package/5ec0d92690b5eb14475279e2f5fcb8678ecbca46/include"
+        "-I./conan_cache/.conan/data/tl-expected/20190710/_/_/package/5ab84d6acfe1f23c4fae0ab88f26e3a396351ac9/include",
+        "-I./conan_cache/.conan/data/benchmark/1.5.3/_/_/package/5ec0d92690b5eb14475279e2f5fcb8678ecbca46/include"
     ],
     "files.associations": {
         "iostream": "cpp",

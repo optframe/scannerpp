@@ -6,3 +6,4 @@ conanbuild.json
 conanbuildinfo.txt
 conaninfo.txt
 graph_info.json
+conan_cache/
